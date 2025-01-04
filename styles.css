@@ -1127,7 +1127,7 @@ section {
     z-index: 100;
     max-width: 120%;
     height: auto;
-    transition: all 0.8s ease-in-out; /* Smoother transition */
+    transition: all 0.5s ease-in-out; /* Reduced from 0.8s to 0.5s */
     object-fit: contain;
     filter: drop-shadow(0 0 20px rgba(0,0,0,0.3));
     image-rendering: -webkit-optimize-contrast;

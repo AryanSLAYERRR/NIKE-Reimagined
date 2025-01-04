@@ -199,19 +199,16 @@ function rotateModels() {
         image: document.querySelector('.shoe-image')
     };
     
-    // Add fade-out class
     elements.image.classList.add('fade-out');
     
     setTimeout(() => {
         currentModel = (currentModel + 1) % airModels.length;
         const model = airModels[currentModel];
         
-        // Update text content
         typeText(elements.text, model.model);
         elements.tagline.textContent = model.tagline;
         elements.description.textContent = model.description;
         
-        // Update image and trigger fade-in
         elements.image.src = model.image;
         elements.image.onload = () => {
             elements.image.classList.remove('fade-out');
@@ -220,9 +217,9 @@ function rotateModels() {
             setTimeout(() => {
                 elements.image.classList.remove('fade-in');
                 isRotating = false;
-            }, 800);
+            }, 500);
         };
-    }, 800);
+    }, 500);
 }
 
 // Update previous button handler
