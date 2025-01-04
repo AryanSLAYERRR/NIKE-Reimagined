@@ -1,12 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // Mouse follow effect
-    // document.addEventListener('mousemove', (e) => {
-    //     const hero = document.querySelector('.hero');
-    //     const mouseX = (window.innerWidth / 2 - e.clientX) / 50;
-    //     const mouseY = (window.innerHeight / 2 - e.clientY) / 50;
-    //     hero.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
-    // });
-
+    
     // Particle.js configuration
     particlesJS('particles-js',
         {

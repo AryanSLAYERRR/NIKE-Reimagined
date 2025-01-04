@@ -2,11 +2,10 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
     font-family: 'Segoe UI', sans-serif;
+}
+::-webkit-scrollbar {
+    display: none;
 }
 
 body {
@@ -21,30 +20,6 @@ body {
     user-select: none;
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
-body::-webkit-scrollbar {
-    display: none;
-}
-
-/* Custom scrollbar styling (optional) */
-/*
-body::-webkit-scrollbar {
-    width: 8px;
-}
-
-body::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1);
-}
-
-body::-webkit-scrollbar-thumb {
-    background: rgba(128, 128, 128, 0.5);
-    border-radius: 4px;
-}
-
-body::-webkit-scrollbar-thumb:hover {
-    background: rgba(128, 128, 128, 0.8);
-}
-*/
 
 nav {
     position: fixed !important;
@@ -253,12 +228,7 @@ nav ul li a:hover {
 }
 
 /* Hover effects */
-.hero-content h1:hover {
-    background: linear-gradient(45deg, #ffffff, #a0a0a0);
-    -webkit-background-clip: text;
-    background-clip: text;
-    transition: all 0.3s ease;
-}
+
 
 /* Add subtle floating animation to the background logo */
 @keyframes float {
@@ -319,21 +289,34 @@ nav ul li a:hover {
 
 /* Add a subtle scroll indicator */
 .scroll-indicator {
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    opacity: 0;
-    animation: fadeInUp 1.5s ease-out forwards;
-    animation-delay: 2s;
-    z-index: 2;
+    position: fixed;
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.scroll-indicator::before {
-    content: '↓';
-    color: #808080;
-    font-size: 2rem;
-    animation: bounce 2s infinite;
+.scroll-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.scroll-dot.active {
+    background: #fff;
+    transform: scale(1.2);
+}
+
+/* Remove any ::before or ::after pseudo-elements */
+.scroll-indicator::before,
+.scroll-indicator::after {
+    display: none;
 }
 
 @keyframes fadeInUp {
@@ -364,7 +347,10 @@ nav ul li a:hover {
     position: fixed;
     width: 100%;
     height: 100%;
+    top: 0;
+    left: 0;
     z-index: 1;
+    pointer-events: auto;
 }
 
 /* Mouse follow effect */
@@ -477,6 +463,8 @@ nav ul li a:hover {
 
 /* Smooth scrolling for the whole page */
 html {
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
     scroll-behavior: smooth;
     overflow-x: hidden; /* Prevent horizontal scroll */
 }
@@ -739,4 +727,440 @@ nav {
 .nav-logo img:hover {
     filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
 }
+
+
+.jordan-section {
+    background: #000;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    position: relative;
+    overflow: hidden;
+}
+.jordan-content {
+    width: 50%;
+    z-index: 2;
+}
+.jordan-content h2 {   
+    font-size: 5rem;
+    color: #fff;
+    margin-bottom: 1rem;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 0.8s ease forwards;
+    animation-delay: 0.2s;
+}
+.jordan-tagline {   
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 0.8s ease forwards;
+    animation-delay: 0.2s;
+}
+.jordan-description {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 0.8s ease forwards;
+    animation-delay: 0.4s;
+}
+/* Air Showcase Section */
+.jordan-section {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    position: relative;
+    overflow: hidden;
+}
+
+.jordan-content {
+    width: 50%;
+    z-index: 2;
+}
+
+.jordan-content h2 {
+    font-size: 5rem;
+    color: #fff;
+    margin-bottom: 1rem;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 0.8s ease forwards;
+}
+
+.jordan-tagline {
+    font-size: 2rem;
+    color: #D63031;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 0.8s ease forwards;
+    animation-delay: 0.6s;
+}
+
+.jordan-description {
+    font-size: 1.2rem;
+    color: #808080;
+    max-width: 500px;
+    margin-bottom: 3rem;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 0.8s ease forwards;
+    animation-delay: 0.8s;
+}
+.explore-btn {
+    background: #D63031;
+    color: #fff;
+    border: none;
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 0.8s ease forwards;
+    animation-delay: 0.6s;
+}
+
+.explore-btn:hover {
+    background: #ff3b30;
+    transform: translateY(-2px);
+}
+
+.jordan-visual {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* Particles Background */
+#particles-js {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: auto;
+}
+
+/* Animations */
+@keyframes navFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Section Transitions */
+section {
+    opacity: 1;
+    transition: opacity 0.8s ease;
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    overflow: visible; /* Ensure content can overflow for scrolling */
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+section.active-section {
+    opacity: 1;
+}
+
+/* Scroll Indicators */
+.scroll-indicator {
+    position: fixed;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.scroll-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.scroll-dot.active {
+    background: #fff;
+    transform: scale(1.2);
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+section {
+    height: 100vh;
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+}
+
+.air-showcase {
+    height: 100vh;
+    width: 100%;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+    margin-top: 100vh; /* Force second section to start below first */
+    height: 100%;
+    background: radial-gradient(circle at center, transparent 30%, #000 70%);
+    overflow: visible;
+}
+.showcase-content {
+    width: 50%;
+    z-index: 2;
+    position: relative;
+}
+
+.model-name {
+    font-size: 5rem;
+    color: #fff;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: baseline;
+    gap: 15px;
+}
+
+.static-text {
+    white-space: nowrap;
+}
+
+.changing-text {
+    display: inline-block;
+    position: relative;
+    white-space: nowrap;
+}
+
+/* Remove the fixed width to allow text to flow naturally */
+.changing-text {
+    min-width: auto;
+    width: auto;
+}
+
+.changing-text::after {
+    content: '';
+    position: absolute;
+    right: -3px;
+    top: 10%;
+    height: 80%;
+    width: 3px;
+    background: #fff;
+    animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.changing-text.fade-out {
+    opacity: 0;
+}
+
+.changing-text.fade-in {
+    opacity: 1;
+}
+
+.model-tagline,
+.model-description {
+    transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(0);
+}
+
+.fade-out {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+@keyframes shoeReveal {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.model-tagline {
+    font-size: 2rem;
+    color: #D63031;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    margin-bottom: 2rem;
+}
+
+.model-description {
+    font-size: 1.2rem;
+    color: #808080;
+    max-width: 500px;
+    margin-bottom: 3rem;
+}
+
+.model-placeholder {
+    width: 500px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-25deg);
+}
+
+.placeholder-text {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* Keep your existing animations and other styles */
+
+.model-container {
+    position: relative;
+    width: 600px;
+    height: 400px;
+}
+
+#shoeCanvas {
+    width: 100%;
+    height: 100%;
+}
+
+.model-controls {
+    position: absolute;
+    bottom: -240px;  /* Increased from -60px to move buttons down */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 100;
+}
+
+.prev-model, .next-model {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.prev-model::before,
+.next-model::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid #fff;
+    border-right: 2px solid #fff;
+}
+
+.prev-model::before {
+    transform: rotate(-135deg); /* Arrow pointing left */
+}
+
+.next-model::before {
+    transform: rotate(45deg); /* Arrow pointing right */
+}
+
+.prev-model:hover,
+.next-model:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+.shoe-image {
+    position: absolute;
+    right: -10%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    max-width: 120%;
+    height: auto;
+    transition: all 0.8s ease-in-out; /* Smoother transition */
+    object-fit: contain;
+    filter: drop-shadow(0 0 20px rgba(0,0,0,0.3));
+    image-rendering: -webkit-optimize-contrast;
+    pointer-events: none;
+    opacity: 1;
+}
+
+.shoe-image.fade-out {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.95); /* Slight scale effect */
+}
+
+.shoe-image.fade-in {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+}
+
+.showcase-visual {
+    position: relative;
+    z-index: 99;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+}
+
+/* Add hover effect for more interactivity */
+.shoe-image:hover {
+    filter: drop-shadow(35px 35px 35px rgba(0, 0, 0, 0.973));
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+
 

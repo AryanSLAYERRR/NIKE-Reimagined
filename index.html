@@ -80,19 +80,40 @@
         </div>
     </nav>
 
-    <section class="hero">
-        <div class="hero-content">
-            <h1>NIKE</h1>
-            <p class="tagline">JUST DO IT TOMORROW</p>
-        </div>
-        <div class="scroll-down">
-            <span class="arrow"></span>
-            <span class="arrow"></span>
-            <span class="arrow"></span>
-        </div>
-    </section>
+    <div class="scroll-indicator">
+        <div class="scroll-dot active"></div>
+        <div class="scroll-dot"></div>
+    </div>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>NIKE</h1>
+                <p class="tagline">Just Do It</p>
+            </div>
+        </section>
+
+        <section class="air-showcase">
+            <div class="showcase-content">
+                <h2 class="model-name">
+                    <span class="static-text">Nike Air</span>
+                    <span class="changing-text">Jordan</span>
+                </h2>
+                <p class="model-tagline">Take Flight</p>
+                <p class="model-description">A legacy of greatness, born on the court, raised in the culture.</p>
+            </div>
+            <div id="shoe-model" class="showcase-visual">
+                <img src="./assets\Shoes\AIRJordans\Redjordans.png" alt="Nike Air Jordan" class="shoe-image">
+                <div class="model-controls">
+                    <button class="prev-model"></button>
+                    <button class="next-model"></button>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="effects.js"></script>
+    <script src="coding.js"></script>
 </body>
 </html>

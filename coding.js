@@ -1,164 +1,37 @@
-let scene, camera, renderer, controls;
-let shoe;
-let cube;
+let currentSection = 0;
+const sections = document.querySelectorAll('section');
+let isScrolling = false;
+const dots = document.querySelectorAll('.scroll-dot');
+let typingTimeout = null;
 
-function init() {
-    // Scene setup
-    scene = new THREE.Scene();
-    scene.background = null;
-
-    // Camera setup
-    camera = new THREE.PerspectiveCamera(
-        75,
-        (window.innerWidth / 2) / window.innerHeight,
-        0.1,
-        1000
-    );
-    camera.position.set(3, 1.5, 10); // Adjusted for side view
-
-    // Enhanced renderer setup with shadows
-    renderer = new THREE.WebGLRenderer({ 
-        alpha: true, 
-        antialias: true 
-    });
-    renderer.setSize(window.innerWidth / 2, window.innerHeight);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    document.getElementById('shoe-model').appendChild(renderer.domElement);
-
-    // Create floor
-    const floorGeometry = new THREE.PlaneGeometry(10, 10);
-    const floorMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x000000,
-        transparent: true,
-        opacity: 0.2
-    });
-    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -1;
-    floor.receiveShadow = true;
-    scene.add(floor);
-
-    // Enhanced lighting setup
-    // Ambient light
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
-    scene.add(ambientLight);
-
-    // Main directional light (like sunlight)
-    const mainLight = new THREE.DirectionalLight(0xffffff, 1);
-    mainLight.position.set(5, 5, 5);
-    mainLight.castShadow = true;
-    mainLight.shadow.mapSize.width = 2048;
-    mainLight.shadow.mapSize.height = 2048;
-    mainLight.shadow.camera.near = 0.5;
-    mainLight.shadow.camera.far = 500;
-    mainLight.shadow.bias = -0.0001;
-    scene.add(mainLight);
-
-    // Add spotlights for dramatic effect
-    const spotLight1 = new THREE.SpotLight(0xffffff, 0.8);
-    spotLight1.position.set(3, 3, 0);
-    spotLight1.angle = Math.PI / 4;
-    spotLight1.penumbra = 0.3;
-    spotLight1.decay = 2;
-    spotLight1.distance = 200;
-    spotLight1.castShadow = true;
-    spotLight1.shadow.bias = -0.0001;
-    scene.add(spotLight1);
-
-    const spotLight2 = new THREE.SpotLight(0xffffff, 0.5);
-    spotLight2.position.set(-3, 3, 0);
-    spotLight2.angle = Math.PI / 4;
-    spotLight2.penumbra = 0.1;
-    spotLight2.decay = 2;
-    spotLight2.distance = 200;
-    spotLight2.castShadow = true;
-    scene.add(spotLight2);
-
-    // Load 3D model
-    const loader = new THREE.GLTFLoader();
-    loader.load(
-        './gltf/Airjordan.gltf',
-        function (gltf) {
-            shoe = gltf.scene;
-            
-            // Scale the model
-            shoe.scale.set(0.3, 0.3, 0.3);
-            
-            // Position for side view
-            shoe.position.set(0, -1.6, 0);
-            
-            // Rotate for side view
-            shoe.rotation.y = Math.PI / 2; // 90 degrees - side view
-            
-            // Enable shadows for the model
-            shoe.traverse((node) => {
-                if (node.isMesh) {
-                    node.castShadow = true;
-                    node.receiveShadow = true;
-                }
-            });
-            
-            scene.add(shoe);
-            scene.remove(cube);
-            cube = null;
-        },
-        undefined,
-        function (error) {
-            console.error('An error occurred loading the model:', error);
-        }
-    );
-
-    // OrbitControls setup
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.screenSpacePanning = false;
-    controls.minDistance = 6;
-    controls.maxDistance = 8;
-    controls.minPolarAngle = Math.PI / 4; // Limit how low camera can go
-    controls.maxPolarAngle = Math.PI / 2; // Limit how high camera can go
-    
-    // Auto rotation
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 1.5; // Slower, more elegant rotation
-    controls.target.set(0, -0.5, 0);
-
-    // Performance optimizations
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Optional: softer shadows
-
-    // Optimize geometry
-    scene.traverse((node) => {
-        if (node.isMesh) {
-            node.geometry.setDrawRange(0, Infinity);
-            node.geometry.attributes.position.needsUpdate = true;
-            // Optional: reduce geometry detail
-            // node.geometry = node.geometry.clone().setDrawRange(0, node.geometry.attributes.position.count * 0.75);
-        }
-    });
-
-    // Adjust camera settings for better performance
-    camera.near = 0.1;
-    camera.far = 1000;
-    camera.updateProjectionMatrix();
-
-    animate();
-}
-
-function animate() {
-    requestAnimationFrame(animate);
-
-    // Only rotate the cube if it exists
-    if (cube) {
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
+const airModels = [
+    {
+        model: "Jordan",
+        tagline: "Take Flight",
+        description: "A legacy of greatness, born on the court, raised in the culture.",
+        image: "./assets/Shoes/AIRJordans/Redjordans.png"
+    },
+    {
+        model: "Max",
+        tagline: "Revolutionary Air",
+        description: "Visible innovation that you can feel.",
+        image: "./assets/Shoes/AIRJordans/Redjordans2.png"
+    },
+    {
+        model: "Force",
+        tagline: "Force of Nature",
+        description: "A street legend, reimagined for the future.",
+        image: "./assets/Shoes/AIRJordans/Greenjordans.png"
+    },
+    {
+        model: "Zoom",
+        tagline: "Speed Meets Comfort",
+        description: "Responsive cushioning for explosive movement.",
+        image: "./assets/Shoes/AIRJordans/Redjordans3.png"
     }
+];
 
-    controls.update();
-    renderer.render(scene, camera);
-}
+let currentModel = 0;
 
 function onWindowResize() {
     camera.aspect = (window.innerWidth / 2) / window.innerHeight;
@@ -183,7 +56,6 @@ window.addEventListener('scroll', () => {
 });
 
 // Category highlight on scroll
-const sections = document.querySelectorAll('section');
 const navLinks = document.querySelectorAll('.nav-links a');
 
 window.addEventListener('scroll', () => {
@@ -204,4 +76,192 @@ window.addEventListener('scroll', () => {
     });
 });
 
-init();
+// Prevent default scroll
+window.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
+
+// Handle scroll events
+window.addEventListener('wheel', (e) => {
+    if (e.deltaY > 0 && currentSection < sections.length - 1) {
+        currentSection++;
+    } else if (e.deltaY < 0 && currentSection > 0) {
+        currentSection--;
+    }
+    
+    // Update sections
+    sections.forEach((section, index) => {
+        if (index === currentSection) {
+            section.classList.add('active-section');
+        } else {
+            section.classList.remove('active-section');
+        }
+    });
+    
+    // Update dots
+    dots.forEach((dot, index) => {
+        if (index === currentSection) {
+            dot.classList.add('active');
+        } else {
+            dot.classList.remove('active');
+        }
+    });
+    
+    sections[currentSection].scrollIntoView({ behavior: 'smooth' });
+});
+
+// Click on dots to navigate
+dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+        currentSection = index;
+        sections[currentSection].scrollIntoView({ behavior: 'smooth' });
+        
+        // Update active states
+        dots.forEach(d => d.classList.remove('active'));
+        sections.forEach(s => s.classList.remove('active-section'));
+        
+        dot.classList.add('active');
+        sections[currentSection].classList.add('active-section');
+    });
+});
+
+// Initialize first section
+window.addEventListener('load', () => {
+    sections[0].classList.add('active-section');
+    dots[0].classList.add('active');
+});
+
+// Optional: Add keyboard navigation
+document.addEventListener('keydown', (e) => {
+    if (isScrolling) return;
+    
+    if (e.key === 'ArrowDown' && currentSection < sections.length - 1) {
+        currentSection++;
+        scrollToSection(currentSection);
+    } else if (e.key === 'ArrowUp' && currentSection > 0) {
+        currentSection--;
+        scrollToSection(currentSection);
+    }
+});
+// Debounce helper function
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+function typeText(element, text) {
+    if (typingTimeout) {
+        clearTimeout(typingTimeout);
+        typingTimeout = null;
+    }
+    
+    let index = 0;
+    element.textContent = '';
+    
+    function addChar() {
+        if (index < text.length) {
+            element.textContent += text.charAt(index);
+            index++;
+            typingTimeout = setTimeout(addChar, 250);
+        }
+    }
+    
+    addChar();
+}
+
+// Update visibility handler
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        // Clear typing animation when tab is not visible
+        if (typingTimeout) {
+            clearTimeout(typingTimeout);
+            typingTimeout = null;
+        }
+    }
+});
+
+// Update the rotation function to handle rapid clicks
+let isRotating = false;
+
+function rotateModels() {
+    if (isRotating) return;
+    isRotating = true;
+    
+    const elements = {
+        text: document.querySelector('.changing-text'),
+        tagline: document.querySelector('.model-tagline'),
+        description: document.querySelector('.model-description'),
+        image: document.querySelector('.shoe-image')
+    };
+    
+    // Add fade-out class
+    elements.image.classList.add('fade-out');
+    
+    setTimeout(() => {
+        currentModel = (currentModel + 1) % airModels.length;
+        const model = airModels[currentModel];
+        
+        // Update text content
+        typeText(elements.text, model.model);
+        elements.tagline.textContent = model.tagline;
+        elements.description.textContent = model.description;
+        
+        // Update image and trigger fade-in
+        elements.image.src = model.image;
+        elements.image.onload = () => {
+            elements.image.classList.remove('fade-out');
+            elements.image.classList.add('fade-in');
+            
+            setTimeout(() => {
+                elements.image.classList.remove('fade-in');
+                isRotating = false;
+            }, 800);
+        };
+    }, 800);
+}
+
+// Update previous button handler
+document.querySelector('.prev-model').addEventListener('click', () => {
+    if (isRotating) return; // Prevent rapid clicks
+    isRotating = true;
+    
+    const elements = {
+        text: document.querySelector('.changing-text'),
+        tagline: document.querySelector('.model-tagline'),
+        description: document.querySelector('.model-description'),
+        image: document.querySelector('.shoe-image')
+    };
+    
+    Object.values(elements).forEach(el => el.style.opacity = 0);
+    
+    setTimeout(() => {
+        currentModel = (currentModel - 1 + airModels.length) % airModels.length;
+        const model = airModels[currentModel];
+        
+        typeText(elements.text, model.model);
+        elements.image.src = model.image;
+        elements.tagline.textContent = model.tagline;
+        elements.description.textContent = model.description;
+        
+        Object.values(elements).forEach(el => el.style.opacity = 1);
+        
+        setTimeout(() => {
+            isRotating = false;
+        }, 500);
+    }, 500);
+});
+
+document.querySelector('.next-model').addEventListener('click', rotateModels);
+
+// Start the rotation
+setInterval(rotateModels, 10000);
+
+// Make sure this runs after DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    init();
+});
