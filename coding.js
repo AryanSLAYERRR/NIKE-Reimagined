@@ -168,4 +168,40 @@ function onWindowResize() {
 
 window.addEventListener('resize', onWindowResize, false);
 
+// Smooth scroll indicator
+window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    const scrolled = window.scrollY > 50;
+    
+    if(scrolled) {
+        nav.style.padding = '0.4rem 1.5rem';
+        nav.style.background = 'rgba(255, 255, 255, 0.03)';
+    } else {
+        nav.style.padding = '0.6rem 1.5rem';
+        nav.style.background = 'rgba(255, 255, 255, 0.02)';
+    }
+});
+
+// Category highlight on scroll
+const sections = document.querySelectorAll('section');
+const navLinks = document.querySelectorAll('.nav-links a');
+
+window.addEventListener('scroll', () => {
+    let current = '';
+    
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if(window.scrollY >= sectionTop - 60) {
+            current = section.getAttribute('id');
+        }
+    });
+
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if(link.getAttribute('href').includes(current)) {
+            link.classList.add('active');
+        }
+    });
+});
+
 init();
