@@ -9,25 +9,28 @@ const airModels = [
         model: "Jordan",
         tagline: "Take Flight",
         description: "A legacy of greatness, born on the court, raised in the culture.",
-        image: "./assets/Shoes/AIRJordans/Redjordans.png"
+        image: "./assets/Shoes/AIRJordans/Redjordans3.png"
     },
     {
         model: "Max",
         tagline: "Revolutionary Air",
         description: "Visible innovation that you can feel.",
-        image: "./assets/Shoes/AIRJordans/Redjordans2.png"
+        image: "./assets/Shoes/AIRMax/AirMax3.png",
+        scale: 1
     },
     {
         model: "Force",
         tagline: "Force of Nature",
         description: "A street legend, reimagined for the future.",
-        image: "./assets/Shoes/AIRJordans/Greenjordans.png"
+        image: "./assets/Shoes/AIRForce/AirForce1.png",
+        scale: 0.8
     },
     {
         model: "Zoom",
         tagline: "Speed Meets Comfort",
         description: "Responsive cushioning for explosive movement.",
-        image: "./assets/Shoes/AIRJordans/Redjordans3.png"
+        image: "./assets/Shoes/AIRZoom/AirZoom2.png",
+        scale: 0.7
     }
 ];
 
@@ -199,7 +202,12 @@ function rotateModels() {
         image: document.querySelector('.shoe-image')
     };
     
+    // Reset any existing transforms before starting animation
+    elements.image.style.transform = 'translateY(-50%) scale(1)';
+    
     elements.image.classList.add('fade-out');
+    elements.tagline.classList.add('fade-out');
+    elements.description.classList.add('fade-out');
     
     setTimeout(() => {
         currentModel = (currentModel + 1) % airModels.length;
@@ -209,22 +217,29 @@ function rotateModels() {
         elements.tagline.textContent = model.tagline;
         elements.description.textContent = model.description;
         
+        // Apply scale only if specified
+        const scale = model.scale || 1;
+        elements.image.style.transform = `translateY(-50%) scale(${scale})`;
+        
         elements.image.src = model.image;
+        
         elements.image.onload = () => {
-            elements.image.classList.remove('fade-out');
-            elements.image.classList.add('fade-in');
-            
-            setTimeout(() => {
-                elements.image.classList.remove('fade-in');
-                isRotating = false;
-            }, 500);
+            requestAnimationFrame(() => {
+                elements.image.classList.remove('fade-out');
+                elements.tagline.classList.remove('fade-out');
+                elements.description.classList.remove('fade-out');
+                
+                setTimeout(() => {
+                    isRotating = false;
+                }, 600);
+            });
         };
-    }, 500);
+    }, 600);
 }
 
-// Update previous button handler
+// Update previous button handler to match the same logic
 document.querySelector('.prev-model').addEventListener('click', () => {
-    if (isRotating) return; // Prevent rapid clicks
+    if (isRotating) return;
     isRotating = true;
     
     const elements = {
@@ -234,23 +249,39 @@ document.querySelector('.prev-model').addEventListener('click', () => {
         image: document.querySelector('.shoe-image')
     };
     
-    Object.values(elements).forEach(el => el.style.opacity = 0);
+    // Reset any existing transforms
+    elements.image.style.transform = 'translateY(-50%) scale(1)';
+    
+    elements.image.classList.add('fade-out');
+    elements.tagline.classList.add('fade-out');
+    elements.description.classList.add('fade-out');
     
     setTimeout(() => {
         currentModel = (currentModel - 1 + airModels.length) % airModels.length;
         const model = airModels[currentModel];
         
         typeText(elements.text, model.model);
-        elements.image.src = model.image;
         elements.tagline.textContent = model.tagline;
         elements.description.textContent = model.description;
         
-        Object.values(elements).forEach(el => el.style.opacity = 1);
+        // Apply scale only if specified
+        const scale = model.scale || 1;
+        elements.image.style.transform = `translateY(-50%) scale(${scale})`;
         
-        setTimeout(() => {
-            isRotating = false;
-        }, 500);
-    }, 500);
+        elements.image.src = model.image;
+        
+        elements.image.onload = () => {
+            requestAnimationFrame(() => {
+                elements.image.classList.remove('fade-out');
+                elements.tagline.classList.remove('fade-out');
+                elements.description.classList.remove('fade-out');
+                
+                setTimeout(() => {
+                    isRotating = false;
+                }, 600);
+            });
+        };
+    }, 600);
 });
 
 document.querySelector('.next-model').addEventListener('click', rotateModels);
@@ -262,3 +293,35 @@ setInterval(rotateModels, 10000);
 document.addEventListener('DOMContentLoaded', function() {
     init();
 });
+
+// Add to your existing JavaScript
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') {
+        document.querySelector('.next-model').click();
+    } else if (e.key === 'ArrowLeft') {
+        document.querySelector('.prev-model').click();
+    }
+});
+
+// Keep touch swipe support
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].screenX;
+});
+
+document.addEventListener('touchend', e => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+});
+
+function handleSwipe() {
+    const swipeThreshold = 50;
+    if (touchEndX < touchStartX - swipeThreshold) {
+        document.querySelector('.next-model').click();
+    }
+    if (touchEndX > touchStartX + swipeThreshold) {
+        document.querySelector('.prev-model').click();
+    }
+}

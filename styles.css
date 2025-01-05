@@ -18,6 +18,7 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    cursor:default
 }
 
 
@@ -111,6 +112,8 @@ nav ul li a:hover {
     align-items: center;
     justify-content: center;
     z-index: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 /* Gradient overlay */
@@ -814,23 +817,23 @@ nav {
     animation-delay: 0.8s;
 }
 .explore-btn {
-    background: #D63031;
-    color: #fff;
-    border: none;
-    padding: 1rem 2.5rem;
-    font-size: 1.1rem;
-    border-radius: 30px;
+    background: transparent;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s ease;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeUp 0.8s ease forwards;
-    animation-delay: 0.6s;
+    margin-top: 0.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .explore-btn:hover {
-    background: #ff3b30;
-    transform: translateY(-2px);
+    background: #ffffff;
+    color: #000000;
 }
 
 .jordan-visual {
@@ -949,7 +952,8 @@ section {
     position: relative;
     overflow: hidden;
     min-height: 100vh;
-    margin-top: 100vh; /* Force second section to start below first */
+    margin-top: 0;
+    padding-top: 0;
     height: 100%;
     background: radial-gradient(circle at center, transparent 30%, #000 70%);
     overflow: visible;
@@ -1011,25 +1015,15 @@ section {
 
 .model-tagline,
 .model-description {
-    transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: translateY(0);
+    transition: opacity 0.5s ease-in-out;
+    opacity: 1;
 }
 
-.fade-out {
+.model-tagline.fade-out, 
+.model-description.fade-out {
     opacity: 0;
-    transform: translateY(20px);
 }
 
-@keyframes shoeReveal {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 .model-tagline {
     font-size: 2rem;
     color: #D63031;
@@ -1127,7 +1121,7 @@ section {
     z-index: 100;
     max-width: 120%;
     height: auto;
-    transition: all 0.5s ease-in-out; /* Reduced from 0.8s to 0.5s */
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);  /* Smoother transition curve */
     object-fit: contain;
     filter: drop-shadow(0 0 20px rgba(0,0,0,0.3));
     image-rendering: -webkit-optimize-contrast;
@@ -1137,7 +1131,7 @@ section {
 
 .shoe-image.fade-out {
     opacity: 0;
-    transform: translateY(-50%) scale(0.95); /* Slight scale effect */
+    transform: translateY(-50%) scale(0.98);  /* Slight scale effect */
 }
 
 .shoe-image.fade-in {
@@ -1162,5 +1156,67 @@ section {
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
+
+
+/* Dynamic gradient background */
+.air-showcase {
+    position: relative;
+    transition: background 0.5s ease;
+}
+
+/* Different background states for each model */
+.air-showcase[data-model="Jordan"] {
+    background: linear-gradient(45deg, #000 0%, #1a1a1a 100%);
+}
+
+.air-showcase[data-model="Max"] {
+    background: linear-gradient(45deg, #1a1a1a 0%, #2a2a2a 100%);
+}
+
+.air-showcase[data-model="Force"] {
+    background: linear-gradient(45deg, #0f0f0f 0%, #202020 100%);
+}
+
+.air-showcase[data-model="Zoom"] {
+    background: linear-gradient(45deg, #151515 0%, #252525 100%);
+}
+
+
+
+
+.cursor {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.2s ease;
+    transform: translate(-50%, -50%);
+}
+
+.cursor.on-button {
+    transform: translate(-50%, -50%) scale(1.5);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Interactive elements cursor */
+.explore-btn, .prev-model, .next-model, .nav-links a {
+    cursor: pointer;
+}
+
+/* Ensure sections take full height */
+.hero,
+.air-showcase {
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Enable smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
 
 
