@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", function() {
     
-    // Particle.js configuration
-    particlesJS('particles-js',
+    // Particle background (Main Page)
+        particlesJS('particles-js',
         {
             "particles": {
                 "number": {
-                    "value": 80,
+                    "value": 70,
                     "density": {
                         "enable": true,
                         "value_area": 800
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     "value": "#ffffff"
                 },
                 "opacity": {
-                    "value": 0.2,
+                    "value": 0.1,
                     "random": false
                 },
                 "size": {
